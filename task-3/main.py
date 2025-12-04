@@ -1,13 +1,5 @@
 import json
-import os
-#Имя файла
-filename = "flowers.json"
-#Если файла нет — создать пустой массив
-if not os.path.exists(filename):
-    with open(filename, "w", encoding="utf-8") as f:
-        json.dump([], f, ensure_ascii=False, indent=4)
-#Счётчик выполненных операций
-operations = 0
+operations = 0 #Счётчик выполненных операций
 while True:
     print("\n======= МЕНЮ =======")
     print("1. Вывести все записи")
@@ -19,28 +11,28 @@ while True:
     choice = input("Выберите пункт меню: ").strip()
 
     #Загружаем файл
-    with open(filename, "r", encoding="utf-8") as f:
+    with open("flowers.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
     #1.Вывести все записи
     if choice == "1":
-        print("\n===== ВСЕ ЗАПИСИ =====")
-        for i, item in enumerate(data):
+        print("\n===== ВСЕ ЗАПИСИ =====") #Выводим меню 1
+        for i, item in enumerate(data): #Перебираем элементы файла
             print(f"[{i}] id: {item['id']}, name: {item['name']}, "
                   f"latin_name: {item['latin_name']}, "
                   f"is_red_book_flower: {item['is_red_book_flower']}, "
                   f"price: {item['price']}")
-        operations += 1
+        operations += 1 #считаем за операцию
 
     #2.Вывести запись по id
     elif choice == "2":
-        try:
+        try: #Выводим меню 2 и заправшиваем данные у пользователя
             find_id = int(input("Введите id: "))
         except:
-            print("Некорректный id.")
+            print("Некорректный id.") #Если id не находиться, выводим ошибку
             continue
         found = False
-        for index, item in enumerate(data):
+        for index, item in enumerate(data): #Перебираем файл в поиске элемента с нужным id
             if item["id"] == find_id:
                 print("\n===== НАЙДЕНО =====")
                 print(f"Позиция: {index}")
@@ -52,12 +44,12 @@ while True:
                 found = True
                 break
         if not found:
-            print("Запись не найдена!")
-        operations += 1
+            print("Запись не найдена!") #Если запись не находиться, выводим ошибку
+        operations += 1 #считаем за операцию
 
     #3.Добавить запись
     elif choice == "3":
-        try:
+        try: #Выводим меню 3 и заправшиваем данные у пользователя
             new_id = int(input("id: "))
             new_name = input("Название: ")
             new_latin = input("Латинское название: ")
@@ -66,42 +58,42 @@ while True:
         except:
             print("Ошибка ввода данных!")
             continue
-        data.append({
+        data.append({  #Записываем данные в файл
             "id": new_id,
             "name": new_name,
             "latin_name": new_latin,
             "is_red_book_flower": new_redbook,
             "price": new_price
         })
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        with open("flowers.json", "w", encoding="utf-8") as f:
+            json.dump(data, f)
         print("Запись добавлена.")
-        operations += 1
+        operations += 1 #считаем за операцию
 
 
     #4.Удалить запись по id
     elif choice == "4":
-        try:
+        try: #Выводим меню 4 и заправшиваем данные у пользователя
             del_id = int(input("Введите id для удаления: "))
         except:
             print("Некорректный id!")
             continue
         removed = False
-        for item in data:
-            if item["id"] == del_id:
+        for i in data:
+            if i["id"] == del_id: #Если запись найдена по id, удаляем её
                 data.remove(item)
                 removed = True
                 break
         if removed:
-            with open(filename, "w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=4)
+            with open("flowers.json", "w", encoding="utf-8") as f:
+                json.dump(data, f) #Сохраняем изменения в файл
             print("Запись удалена.")
         else:
             print("Запись не найдена!")
-        operations += 1
+        operations += 1 #считаем за операцию
 
     #5.Выход
-    elif choice == "5":
+    elif choice == "5": #Выводим меню 5
         print("\n===================================")
         print("Вы завершили программу.")
         print("Количество операций:", operations)
